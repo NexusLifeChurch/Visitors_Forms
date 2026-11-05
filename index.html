@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Nexus Life - Visitor Registration</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
@@ -30,7 +30,6 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* Animation หัวใจเต้นสำหรับโลโก้ */
     @keyframes heartbeat {
       0%, 100% { transform: scale(1); }
       14% { transform: scale(1.06); }
@@ -47,56 +46,60 @@
     ::-webkit-scrollbar-track { background: #FFF0F5; }
     ::-webkit-scrollbar-thumb { background: #F8BBD0; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #F48FB1; }
+
+    /* คลาสสำหรับเน้นช่องที่กรอกผิด */
+    .input-error {
+      border-color: #EF4444 !important; /* สีแดง Tailwind red-500 */
+      box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2) !important;
+    }
   </style>
 </head>
-<body class="text-[#6A4A4A] min-h-screen">
+<body class="text-[#6A4A4A] min-h-screen relative">
 
   <div class="max-w-3xl mx-auto pb-12">
     
-    <!-- 🖼️ 1. แบนเนอร์หัวฟอร์ม -->
-    <div class="w-full relative z-0 rounded-b-[24px] shadow-md overflow-hidden">
-      <img src="header-cover.png" alt="Welcome to NxLife" class="w-full h-48 md:h-64 object-cover object-center block">
+    <!-- 🖼️ 1. แบนเนอร์หัวฟอร์ม (แก้ไขให้แสดงผลดีขึ้นบนมือถือ) -->
+    <!-- ปรับความสูงและ object-fit เพื่อให้ภาพไม่โดนตัดมากเกินไปบนหน้าจอเล็ก -->
+    <div class="w-full relative z-0 rounded-b-[24px] shadow-md overflow-hidden bg-white">
+      <img src="header-cover.png" alt="Welcome to NxLife" class="w-full h-auto max-h-[300px] object-contain sm:object-cover sm:h-48 md:h-64 block">
     </div>
 
-    <!-- 💌 2. กล่องข้อความต้อนรับ (แก้การซ้อนทับและช่องไฟแล้ว) -->
-    <!-- เปลี่ยนจาก -mt-10 เป็น -mt-4 เพื่อซ้อนแค่นิดเดียว และปรับ Padding (pt-6, pb-8) ให้สมดุลขึ้น -->
-    <div class="relative z-10 bg-[#FFF9FA] mx-4 md:mx-8 -mt-4 px-6 pt-6 pb-8 md:px-10 md:pt-8 md:pb-10 rounded-2xl shadow-lg border border-[#FCE4EC] text-center overflow-hidden">
+    <!-- 💌 2. กล่องข้อความต้อนรับ -->
+    <div class="relative z-10 bg-[#FFF9FA] mx-4 md:mx-8 -mt-6 px-4 pt-8 pb-6 md:px-10 md:pt-8 md:pb-8 rounded-2xl shadow-lg border border-[#FCE4EC] text-center overflow-hidden">
       
-      <!-- 🎨 เส้นสีตกแต่งด้านบนของกรอบ -->
       <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#F48FB1] via-[#F8BBD0] to-[#F48FB1]"></div>
       
-      <!-- โลโก้ NxLife (ปรับช่องไฟ mt-2 และ mb-6 ให้สมดุล) -->
-      <img src="life_logo.png" alt="NxLife Logo" class="logo-beat w-24 md:w-28 mx-auto mt-2 mb-6 object-contain">
-
-      <h1 class="text-2xl md:text-3xl font-bold mb-4 text-[#D87093]">✨ ยินดีที่เราได้พบกัน ✨</h1>
-      <p class="text-[#7D5A5A] mb-2 leading-relaxed">ขอบคุณที่แวะมาทำความรู้จักกับ NxLife นะคะ/นะครับ 💖</p>
-      <p class="text-[#7D5A5A] mb-2 leading-relaxed">เราเชื่อว่าทุกการพบกันมีความหมาย และดีใจที่วันนี้เราได้มีโอกาสรู้จักกันมากขึ้น</p>
-      <p class="text-[#7D5A5A] mb-5 leading-relaxed max-w-2xl mx-auto">หากท่านสะดวก ขอเชิญแบ่งปันข้อมูลและช่องทางการติดต่อสักเล็กน้อย เพื่อให้เราได้ทักทาย ส่งต่อมิตรภาพดี ๆ แนะนำกิจกรรมที่น่าสนใจ หรือเป็นกำลังใจให้กันในโอกาสต่อไป 🤗</p>
-      <p class="text-[#D87093] font-medium text-sm md:text-base">ที่นี่…เราอยากให้ท่านรู้สึกเป็นตัวของตัวเอง และสัมผัสได้ถึงความรักที่มีให้กันอย่างจริงใจ</p>
+      <!-- แก้ไขข้อความให้อยู่บรรทัดเดียวกัน โดยใช้ whitespace-nowrap -->
+      <h1 class="text-xl md:text-3xl font-bold mb-4 text-[#D87093] whitespace-nowrap">✨ ยินดีที่เราได้พบกัน ✨</h1>
+      <p class="text-[#7D5A5A] mb-2 leading-relaxed text-sm md:text-base">ขอบคุณที่แวะมาทำความรู้จักกับ NxLife นะคะ/นะครับ 💖</p>
+      <p class="text-[#7D5A5A] mb-2 leading-relaxed text-sm md:text-base">เราเชื่อว่าทุกการพบกันมีความหมาย และดีใจที่วันนี้เราได้มีโอกาสรู้จักกันมากขึ้น</p>
+      <p class="text-[#7D5A5A] mb-4 leading-relaxed max-w-2xl mx-auto text-sm md:text-base">หากท่านสะดวก ขอเชิญแบ่งปันข้อมูลและช่องทางการติดต่อสักเล็กน้อย เพื่อให้เราได้ทักทาย ส่งต่อมิตรภาพดี ๆ แนะนำกิจกรรมที่น่าสนใจ หรือเป็นกำลังใจให้กันในโอกาสต่อไป 🤗</p>
+      <p class="text-[#D87093] font-medium text-xs md:text-base">ที่นี่…เราอยากให้ท่านรู้สึกเป็นตัวของตัวเอง และสัมผัสได้ถึงความรักที่มีให้กันอย่างจริงใจ</p>
     </div>
 
     <!-- 📝 3. พื้นที่กรอกแบบฟอร์ม -->
     <div class="px-4 md:px-8 mt-6">
       
-      <!-- Loader ระหว่างดึงข้อมูล -->
       <div id="loadingData" class="flex flex-col items-center justify-center py-10">
          <div class="loader mb-4"></div>
          <p class="text-[#D87093] font-medium">กำลังเตรียมข้อมูลฟอร์ม...</p>
       </div>
 
-      <form id="visitorForm" class="space-y-6 hidden">
+      <form id="visitorForm" class="space-y-6 hidden" novalidate>
         
         <!-- ส่วนที่ 1: ข้อมูลเบื้องต้น -->
-        <div class="bg-white p-6 rounded-2xl border border-[#FCE4EC] shadow-sm hover:shadow-md transition duration-300">
-          <h2 class="text-xl font-semibold mb-4 flex items-center text-[#C27BA0]">
+        <div class="bg-white p-5 md:p-6 rounded-2xl border border-[#FCE4EC] shadow-sm">
+          <h2 class="text-lg md:text-xl font-semibold mb-4 flex items-center text-[#C27BA0]">
             <i class="fas fa-info-circle mr-2 text-[#F4A7B9]"></i> ข้อมูลเบื้องต้น
           </h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
             <div>
               <label class="block text-sm font-medium mb-1 text-[#7D5A5A]">คุณรู้จักเราจากช่องทางใด *</label>
               <select id="source" required class="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F8BBD0] focus:border-[#F8BBD0] bg-white outline-none transition cursor-pointer">
                 <option value="">-- เลือกช่องทาง --</option>
               </select>
+              <!-- ข้อความ Error (ซ่อนไว้ก่อน) -->
+              <p class="text-red-500 text-xs mt-1 hidden error-msg">กรุณาเลือกช่องทางที่รู้จักเรา</p>
             </div>
             <div>
               <label class="block text-sm font-medium mb-1 text-[#7D5A5A]">ชื่อผู้แนะนำ (ถ้ามี)</label>
@@ -106,77 +109,83 @@
         </div>
 
         <!-- ส่วนที่ 2: ข้อมูลส่วนตัว -->
-        <div class="bg-white p-6 rounded-2xl border border-[#FCE4EC] shadow-sm hover:shadow-md transition duration-300">
-          <h2 class="text-xl font-semibold mb-4 flex items-center text-[#C27BA0]">
+        <div class="bg-white p-5 md:p-6 rounded-2xl border border-[#FCE4EC] shadow-sm">
+          <h2 class="text-lg md:text-xl font-semibold mb-4 flex items-center text-[#C27BA0]">
             <i class="fas fa-user mr-2 text-[#F4A7B9]"></i> ข้อมูลส่วนตัว
           </h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 mb-4">
             <div class="md:col-span-2">
               <label class="block text-sm font-medium mb-1 text-[#7D5A5A]">ชื่อ-นามสกุล / ชื่อเล่น *</label>
               <input type="text" id="name" required class="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F8BBD0] focus:border-[#F8BBD0] outline-none transition" placeholder="ชื่อของคุณ">
+              <p class="text-red-500 text-xs mt-1 hidden error-msg">กรุณากรอกชื่อของคุณ</p>
             </div>
             <div>
               <label class="block text-sm font-medium mb-1 text-[#7D5A5A]">ช่วงอายุ *</label>
               <select id="age" required class="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F8BBD0] focus:border-[#F8BBD0] bg-white outline-none transition cursor-pointer">
                 <option value="">-- เลือกช่วงอายุ --</option>
               </select>
+              <p class="text-red-500 text-xs mt-1 hidden error-msg">กรุณาเลือกระบุช่วงอายุ</p>
             </div>
             <div>
               <label class="block text-sm font-medium mb-1 text-[#7D5A5A]">เพศ *</label>
               <select id="gender" required class="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F8BBD0] focus:border-[#F8BBD0] bg-white outline-none transition cursor-pointer">
                 <option value="">-- เลือกเพศ --</option>
               </select>
+              <p class="text-red-500 text-xs mt-1 hidden error-msg">กรุณาเลือกระบุเพศ</p>
             </div>
             <div class="md:col-span-2">
               <label class="block text-sm font-medium mb-1 text-[#7D5A5A]">จังหวัดที่อยู่ปัจจุบัน *</label>
               <select id="province" required class="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F8BBD0] focus:border-[#F8BBD0] bg-white outline-none transition cursor-pointer">
                 <option value="">-- เลือกจังหวัด --</option>
               </select>
+              <p class="text-red-500 text-xs mt-1 hidden error-msg">กรุณาเลือกระบุจังหวัด</p>
             </div>
           </div>
         </div>
 
         <!-- ส่วนที่ 3: การติดต่อ -->
-        <div class="bg-white p-6 rounded-2xl border border-[#FCE4EC] shadow-sm hover:shadow-md transition duration-300">
-          <h2 class="text-xl font-semibold mb-2 flex items-center text-[#C27BA0]">
+        <div class="bg-white p-5 md:p-6 rounded-2xl border border-[#FCE4EC] shadow-sm" id="contactSection">
+          <h2 class="text-lg md:text-xl font-semibold mb-2 flex items-center text-[#C27BA0]">
             <i class="fas fa-address-book mr-2 text-[#F4A7B9]"></i> ช่องทางติดต่อ
           </h2>
-          <p class="text-sm text-[#F06292] mb-5">* กรุณาระบุอย่างน้อย 1 ช่องทาง เพื่อให้เราติดต่อกลับได้นะคะ/นะครับ</p>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <p class="text-xs md:text-sm text-[#F06292] mb-4">* กรุณาระบุอย่างน้อย 1 ช่องทาง เพื่อให้เราติดต่อกลับได้นะคะ/นะครับ</p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
             <div>
               <label class="block text-sm font-medium mb-1 text-[#7D5A5A]"><i class="fas fa-phone text-[#D87093] opacity-70"></i> เบอร์โทรศัพท์</label>
-              <input type="tel" id="phone" class="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F8BBD0] focus:border-[#F8BBD0] outline-none transition" placeholder="08xxxxxxxx">
+              <input type="tel" id="phone" class="w-full contact-input p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F8BBD0] focus:border-[#F8BBD0] outline-none transition" placeholder="08xxxxxxxx">
             </div>
             <div>
               <label class="block text-sm font-medium mb-1 text-[#7D5A5A]"><i class="fab fa-line text-[#06C755] opacity-80"></i> Line ID</label>
-              <input type="text" id="lineId" class="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F8BBD0] focus:border-[#F8BBD0] outline-none transition" placeholder="ไอดีไลน์">
+              <input type="text" id="lineId" class="w-full contact-input p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F8BBD0] focus:border-[#F8BBD0] outline-none transition" placeholder="ไอดีไลน์">
             </div>
             <div>
               <label class="block text-sm font-medium mb-1 text-[#7D5A5A]"><i class="fas fa-envelope text-[#D87093] opacity-70"></i> อีเมล</label>
-              <input type="email" id="email" class="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F8BBD0] focus:border-[#F8BBD0] outline-none transition" placeholder="email@example.com">
+              <input type="email" id="email" class="w-full contact-input p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F8BBD0] focus:border-[#F8BBD0] outline-none transition" placeholder="email@example.com">
             </div>
           </div>
+          <p class="text-red-500 text-xs mt-2 hidden" id="contactErrorMsg">กรุณาระบุช่องทางการติดต่ออย่างน้อย 1 ช่องทาง</p>
         </div>
 
         <!-- ส่วนที่ 4: ความสนใจ -->
-        <div class="bg-white p-6 rounded-2xl border border-[#FCE4EC] shadow-sm hover:shadow-md transition duration-300">
-          <h2 class="text-xl font-semibold mb-1 flex items-center text-[#C27BA0]">
+        <div class="bg-white p-5 md:p-6 rounded-2xl border border-[#FCE4EC] shadow-sm" id="interestSection">
+          <h2 class="text-lg md:text-xl font-semibold mb-1 flex items-center text-[#C27BA0]">
             <i class="fas fa-heart mr-2 text-[#F4A7B9]"></i> ✨ ความสนใจที่อยากให้ NxLife เชื่อมต่อ
           </h2>
-          <p class="text-xs text-[#D87093] mb-5 pl-7">เลือกได้มากกว่า 1 ข้อ ตามความสนใจของคุณ</p>
+          <p class="text-[11px] md:text-xs text-[#D87093] mb-4 pl-7">เลือกได้มากกว่า 1 ข้อ ตามความสนใจของคุณ</p>
           
-          <div id="interestContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3 pl-2 mb-5">
+          <div id="interestContainer" class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3 pl-2 mb-4">
             <!-- ข้อมูลดึงจาก GAS -->
           </div>
+          <p class="text-red-500 text-xs mt-1 mb-3 hidden" id="interestErrorMsg">กรุณาเลือกความสนใจอย่างน้อย 1 ข้อ</p>
 
-          <p class="text-xs text-[#7D5A5A] italic bg-[#FFF0F5] p-3 rounded-xl border border-[#FCE4EC] text-center mt-2">
+          <p class="text-[11px] md:text-xs text-[#7D5A5A] italic bg-[#FFF0F5] p-3 rounded-xl border border-[#FCE4EC] text-center mt-2 leading-relaxed">
             ไม่ต้องกังวลว่าจะต้องเลือกอะไรเป็นพิเศษ เรายินดีทำความรู้จักและเดินไปกับคุณในทุกก้าวของการเติบโตนะครับ 💖
           </p>
         </div>
 
         <!-- ส่วนที่ 5: สถานะความเชื่อ -->
-        <div class="bg-white p-6 rounded-2xl border border-[#FCE4EC] shadow-sm hover:shadow-md transition duration-300">
-           <h2 class="text-xl font-semibold mb-4 flex items-center text-[#C27BA0]">
+        <div class="bg-white p-5 md:p-6 rounded-2xl border border-[#FCE4EC] shadow-sm">
+           <h2 class="text-lg md:text-xl font-semibold mb-4 flex items-center text-[#C27BA0]">
             <i class="fas fa-cross mr-2 text-[#F4A7B9]"></i> สถานภาพความเชื่อเบื้องต้น
           </h2>
            <div>
@@ -186,16 +195,18 @@
             </div>
         </div>
 
-        <!-- คำลงท้ายก่อนกดลงทะเบียน -->
-        <div class="text-center mt-10 mb-6 px-4">
-          <p class="text-[#D87093] font-bold text-lg mb-2">ก่อนกดลงทะเบียน… ✨</p>
-          <p class="text-[#7D5A5A] mb-1">ส่งรอยยิ้มเล็ก ๆ พร้อมเปิดใจรับมิตรภาพดี ๆ ที่กำลังเริ่มต้น 💖</p>
-          <p class="text-[#7D5A5A]">แล้วค่อย ๆ แตะที่ปุ่ม <span class="font-semibold text-[#D87093]">“กดส่ง...รอยยิ้ม ทักทาย และเปิดประตูสู่มิตรภาพ”</span> เพื่อให้เราได้รู้จักกันมากขึ้นนะครับ/นะคะ 🤗</p>
+        <!-- ย้ายโลโก้มาไว้ตรงนี้ เหนือปุ่มกดส่ง -->
+        <div class="text-center mt-10 mb-4 px-4 flex flex-col items-center">
+          <img src="life_logo.png" alt="NxLife Logo" class="logo-beat w-20 md:w-24 mx-auto mb-4 object-contain">
+          
+          <p class="text-[#D87093] font-bold text-base md:text-lg mb-2">ก่อนกดลงทะเบียน… ✨</p>
+          <p class="text-[#7D5A5A] text-sm md:text-base mb-1">ส่งรอยยิ้มเล็ก ๆ พร้อมเปิดใจรับมิตรภาพดี ๆ ที่กำลังเริ่มต้น 💖</p>
+          <p class="text-[#7D5A5A] text-sm md:text-base">แล้วค่อย ๆ แตะที่ปุ่ม <span class="font-semibold text-[#D87093]">“กดส่ง...รอยยิ้ม ทักทาย และเปิดประตูสู่มิตรภาพ”</span> เพื่อให้เราได้รู้จักกันมากขึ้นนะครับ/นะคะ 🤗</p>
         </div>
 
         <!-- ปุ่ม Submit -->
-        <div class="pt-2">
-          <button type="submit" id="submitBtn" class="w-full bg-[#F48FB1] hover:bg-[#F06292] text-white font-bold py-4 px-4 rounded-2xl transition duration-300 shadow-[0_4px_15px_rgb(244,143,177,0.4)] hover:shadow-[0_6px_20px_rgb(240,98,146,0.5)] transform hover:-translate-y-1 text-base md:text-lg">
+        <div class="pt-2 pb-6">
+          <button type="submit" id="submitBtn" class="w-full bg-[#F48FB1] hover:bg-[#F06292] text-white font-bold py-4 px-4 rounded-2xl transition duration-300 shadow-[0_4px_15px_rgb(244,143,177,0.4)] hover:shadow-[0_6px_20px_rgb(240,98,146,0.5)] transform hover:-translate-y-1 text-[15px] md:text-lg">
             กดส่ง...รอยยิ้ม ทักทาย และเปิดประตูสู่มิตรภาพ
           </button>
         </div>
@@ -236,8 +247,8 @@
                 const label = document.createElement('label');
                 label.className = "flex items-center space-x-3 cursor-pointer p-2 hover:bg-[#FFF0F5] rounded-lg transition border border-transparent hover:border-[#FCE4EC]";
                 label.innerHTML = `
-                  <input type="checkbox" name="interestGroup" value="${item}" class="w-5 h-5 text-[#F48FB1] border-gray-300 rounded focus:ring-[#F48FB1] focus:ring-2">
-                  <span class="text-[#7D5A5A] font-medium">${item}</span>
+                  <input type="checkbox" name="interestGroup" value="${item}" class="interest-checkbox w-5 h-5 text-[#F48FB1] border-gray-300 rounded focus:ring-[#F48FB1] focus:ring-2">
+                  <span class="text-sm md:text-base text-[#7D5A5A] font-medium">${item}</span>
                 `;
                 interestContainer.appendChild(label);
               });
@@ -260,28 +271,94 @@
         });
     });
 
+    // ล้าง Error เมื่อผู้ใช้เริ่มกรอกข้อมูลใหม่
+    function clearErrors() {
+      document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+      document.querySelectorAll('.error-msg').forEach(el => el.classList.add('hidden'));
+      document.getElementById('contactErrorMsg').classList.add('hidden');
+      document.getElementById('interestErrorMsg').classList.add('hidden');
+    }
+
+    // ทำความสะอาด error เวลามีการพิมพ์หรือเลือกข้อมูล
+    document.querySelectorAll('input, select').forEach(el => {
+      el.addEventListener('input', function() {
+        this.classList.remove('input-error');
+        if(this.nextElementSibling && this.nextElementSibling.classList.contains('error-msg')) {
+          this.nextElementSibling.classList.add('hidden');
+        }
+      });
+      el.addEventListener('change', function() {
+        this.classList.remove('input-error');
+        if(this.nextElementSibling && this.nextElementSibling.classList.contains('error-msg')) {
+          this.nextElementSibling.classList.add('hidden');
+        }
+      });
+    });
+
     document.getElementById("visitorForm").addEventListener("submit", function(e) {
       e.preventDefault(); 
+      clearErrors(); // ล้าง Error เก่าก่อนเช็คใหม่
+      
+      let isValid = true;
+      let firstErrorElement = null; // เก็บตำแหน่งแรกที่เจอ error ไว้สำหรับ Scroll กลับไป
 
+      // ตรวจสอบข้อมูลจำเป็น (Required Fields)
+      const requiredFields = ['source', 'name', 'age', 'gender', 'province'];
+      requiredFields.forEach(fieldId => {
+        const el = document.getElementById(fieldId);
+        if(!el.value.trim()) {
+          el.classList.add('input-error');
+          el.nextElementSibling.classList.remove('hidden'); // โชว์ข้อความ error ด้านล่าง
+          isValid = false;
+          if(!firstErrorElement) firstErrorElement = el; // จำตำแหน่งแรกไว้
+        }
+      });
+
+      // ตรวจสอบช่องทางติดต่อ (ต้องมีอย่างน้อย 1)
       const phone = document.getElementById("phone").value.trim();
       const lineId = document.getElementById("lineId").value.trim();
       const email = document.getElementById("email").value.trim();
 
       if (phone === "" && lineId === "" && email === "") {
-        Swal.fire({
-          icon: 'warning',
-          title: 'ขาดข้อมูลการติดต่อ',
-          text: 'กรุณาระบุ เบอร์โทรศัพท์, Line ID หรือ อีเมล อย่างน้อย 1 ช่องทางนะคะ/นะครับ 🥺',
-          confirmButtonColor: '#F48FB1'
-        });
-        return;
+        document.querySelectorAll('.contact-input').forEach(el => el.classList.add('input-error'));
+        document.getElementById('contactErrorMsg').classList.remove('hidden');
+        isValid = false;
+        if(!firstErrorElement) firstErrorElement = document.getElementById('contactSection');
       }
 
+      // ตรวจสอบความสนใจ (เลือกอย่างน้อย 1)
       const selectedInterests = [];
       document.querySelectorAll('input[name="interestGroup"]:checked').forEach(cb => {
         selectedInterests.push(cb.value);
       });
 
+      if(selectedInterests.length === 0) {
+         document.getElementById('interestErrorMsg').classList.remove('hidden');
+         isValid = false;
+         if(!firstErrorElement) firstErrorElement = document.getElementById('interestSection');
+      }
+
+      // ถ้าไม่ผ่าน Validation ให้เลื่อนจอไปจุดที่ผิด และโชว์ Popup เตือน
+      if(!isValid) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'ข้อมูลยังไม่ครบถ้วน',
+          text: 'กรุณาตรวจสอบและกรอกข้อมูลในช่องที่เน้นสีแดงให้ครบถ้วนนะคะ/นะครับ 🥺',
+          confirmButtonColor: '#F48FB1'
+        }).then(() => {
+          // เลื่อนหน้าจอกลับไปจุดที่มีปัญหา
+          if(firstErrorElement) {
+            const yOffset = -80; // เผื่อระยะขอบบนเล็กน้อย
+            const y = firstErrorElement.getBoundingClientRect().top + window.pageYOffset + yOffset;
+            window.scrollTo({top: y, behavior: 'smooth'});
+            // ให้โฟกัสที่ช่องนั้นด้วยถ้าทำได้
+            if(firstErrorElement.focus) firstErrorElement.focus();
+          }
+        });
+        return;
+      }
+
+      // ถ้าข้อมูลครบ เตรียมส่ง
       const payload = {
         source: document.getElementById("source").value,
         referrer: document.getElementById("referrer").value,
@@ -310,16 +387,14 @@
       .then(response => response.json())
       .then(result => {
         if(result.status === "success") {
-        Swal.fire({
+          Swal.fire({
             icon: 'success',
             title: 'ดีใจที่ได้รู้จักกันนะครับ/คะ 💖',
             html: 'ขอบคุณที่แวะมาทำความรู้จักกับ NxLife<br><br>หวังว่า NxLife จะเป็นอีกหนึ่งพื้นที่ที่ทำให้คุณรู้สึกอบอุ่น เป็นตัวของตัวเอง และมีเพื่อนร่วมเดินทางที่ดีนะครับ/คะ 🎉',
             confirmButtonColor: '#F48FB1'
           }).then(() => {
-            // 1. พยายามสั่งปิดหน้าต่าง (จะได้ผลดีถ้าเปิดฟอร์มผ่านแอป LINE หรือ Facebook)
+             // เมื่อกด OK ปิด Popup ให้ลบฟอร์มทิ้ง
             window.close();
-            
-            // 2. ถ้าเบราว์เซอร์บล็อกการปิดแท็บ เราจะเคลียร์ฟอร์มทิ้งและโชว์หน้าจบสวยๆ แทน
             document.body.innerHTML = `
               <div class="min-h-screen flex flex-col items-center justify-center bg-[#FFF0F5] text-center p-6">
                 <i class="fas fa-heart text-6xl text-[#F48FB1] mb-6 animate-pulse"></i>
