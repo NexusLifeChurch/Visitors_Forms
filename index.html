@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Life - Visitor Registration</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      background-color: #FFF0F5; 
+    }
+    
+    .loader {
+      border: 4px solid #FCE4EC;
+      border-top: 4px solid #F48FB1;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Animation หัวใจเต้นสำหรับโลโก้ */
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      14% { transform: scale(1.06); }
+      28% { transform: scale(1); }
+      42% { transform: scale(1.04); }
+      56% { transform: scale(1); }
+    }
+    
+    .logo-beat {
+      animation: heartbeat 3.2s ease-in-out infinite;
+    }
+    
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #FFF0F5; }
+    ::-webkit-scrollbar-thumb { background: #F8BBD0; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #F48FB1; }
+  </style>
+</head>
+<body class="text-[#6A4A4A] min-h-screen">
+
+  <div class="max-w-3xl mx-auto pb-12">
+    
+    <!-- 🖼️ 1. แบนเนอร์หัวฟอร์ม -->
+    <div class="w-full relative z-0 rounded-b-[24px] shadow-md overflow-hidden">
+      <img src="header-cover.png" alt="Welcome to NxLife" class="w-full h-48 md:h-64 object-cover object-center block">
+    </div>
+
+    <!-- 💌 2. กล่องข้อความต้อนรับ (แก้การซ้อนทับและช่องไฟแล้ว) -->
+    <!-- เปลี่ยนจาก -mt-10 เป็น -mt-4 เพื่อซ้อนแค่นิดเดียว และปรับ Padding (pt-6, pb-8) ให้สมดุลขึ้น -->
+    <div class="relative z-10 bg-[#FFF9FA] mx-4 md:mx-8 -mt-4 px-6 pt-6 pb-8 md:px-10 md:pt-8 md:pb-10 rounded-2xl shadow-lg border border-[#FCE4EC] text-center overflow-hidden">
+      
+      <!-- 🎨 เส้นสีตกแต่งด้านบนของกรอบ -->
+      <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#F48FB1] via-[#F8BBD0] to-[#F48FB1]"></div>
+      
+      <!-- โลโก้ NxLife (ปรับช่องไฟ mt-2 และ mb-6 ให้สมดุล) -->
+      <img src="life_logo.png" alt="NxLife Logo" class="logo-beat w-24 md:w-28 mx-auto mt-2 mb-6 object-contain">
+
+      <h1 class="text-2xl md:text-3xl font-bold mb-4 text-[#D87093]">✨ ยินดีที่เราได้พบกัน ✨</h1>
+      <p class="text-[#7D5A5A] mb-2 leading-relaxed">ขอบคุณที่แวะมาทำความรู้จักกับ NxLife นะคะ/นะครับ 💖</p>
+      <p class="text-[#7D5A5A] mb-2 leading-relaxed">เราเชื่อว่าทุกการพบกันมีความหมาย และดีใจที่วันนี้เราได้มีโอกาสรู้จักกันมากขึ้น</p>
+      <p class="text-[#7D5A5A] mb-5 leading-relaxed max-w-2xl mx-auto">หากท่านสะดวก ขอเชิญแบ่งปันข้อมูลและช่องทางการติดต่อสักเล็กน้อย เพื่อให้เราได้ทักทาย ส่งต่อมิตรภาพดี ๆ แนะนำกิจกรรมที่น่าสนใจ หรือเป็นกำลังใจให้กันในโอกาสต่อไป 🤗</p>
+      <p class="text-[#D87093] font-medium text-sm md:text-base">ที่นี่…เราอยากให้ท่านรู้สึกเป็นตัวของตัวเอง และสัมผัสได้ถึงความรักที่มีให้กันอย่างจริงใจ</p>
+    </div>
+
+    <!-- 📝 3. พื้นที่กรอกแบบฟอร์ม -->
+    <div class="px-4 md:px-8 mt-6">
+      
+      <!-- Loader ระหว่างดึงข้อมูล -->
+      <div id="loadingData" class="flex flex-col items-center justify-center py-10">
+         <div class="loader mb-4"></div>
+         <p class="text-[#D87093] font-medium">กำลังเตรียมข้อมูลฟอร์ม...</p>
+      </div>
+
+      <form id="visitorForm" class="space-y-6 hidden">
+        
+        <!-- ส่วนที่ 1: ข้อมูลเบื้องต้น -->
+        <div class="bg-white p-6 rounded-2xl border border-[#FCE4EC] shadow-sm hover:shadow-md transition duration-300">
+          <h2 class="text-xl font-semibold mb-4 flex items-center text-[#C27BA0]">
+            <i class="fas fa-info-circle mr-2 text-[#F4A7B9]"></i> ข้อมูลเบื้องต้น
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+              <label class="block text-sm font-medium mb-1 text-[#7D5A5A]">คุณรู้จักเราจากช่องทางใด *</label>
+              <select id="source" required class="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F8BBD0] focus:border-[#F8BBD0] bg-white outline-none transition cursor-pointer">
+                <option value="">-- เลือกช่องทาง --</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1 text-[#7D5A5A]">ชื่อผู้แนะนำ (ถ้ามี)</label>
+              <input type="text" id="referrer" class="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F8BBD0] focus:border-[#F8BBD0] outline-none transition" placeholder="ระบุชื่อผู้แนะนำ">
+            </div>
+          </div>
+        </div>
+
+        <!-- ส่วนที่ 2: ข้อมูลส่วนตัว -->
+        <div class="bg-white p-6 rounded-2xl border border-[#FCE4EC] shadow-sm hover:shadow-md transition duration-300">
+          <h2 class="text-xl font-semibold mb-4 flex items-center text-[#C27BA0]">
+            <i class="fas fa-user mr-2 text-[#F4A7B9]"></i> ข้อมูลส่วนตัว
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
+            <div class="md:col-span-2">
+              <label class="block text-sm font-medium mb-1 text-[#7D5A5A]">ชื่อ-นามสกุล / ชื่อเล่น *</label>
+              <input type="text" id="name" required class="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F8BBD0] focus:border-[#F8BBD0] outline-none transition" placeholder="ชื่อของคุณ">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1 text-[#7D5A5A]">ช่วงอายุ *</label>
+              <select id="age" required class="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F8BBD0] focus:border-[#F8BBD0] bg-white outline-none transition cursor-pointer">
+                <option value="">-- เลือกช่วงอายุ --</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1 text-[#7D5A5A]">เพศ *</label>
+              <select id="gender" required class="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F8BBD0] focus:border-[#F8BBD0] bg-white outline-none transition cursor-pointer">
+                <option value="">-- เลือกเพศ --</option>
+              </select>
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-sm font-medium mb-1 text-[#7D5A5A]">จังหวัดที่อยู่ปัจจุบัน *</label>
+              <select id="province" required class="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F8BBD0] focus:border-[#F8BBD0] bg-white outline-none transition cursor-pointer">
+                <option value="">-- เลือกจังหวัด --</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- ส่วนที่ 3: การติดต่อ -->
+        <div class="bg-white p-6 rounded-2xl border border-[#FCE4EC] shadow-sm hover:shadow-md transition duration-300">
+          <h2 class="text-xl font-semibold mb-2 flex items-center text-[#C27BA0]">
+            <i class="fas fa-address-book mr-2 text-[#F4A7B9]"></i> ช่องทางติดต่อ
+          </h2>
+          <p class="text-sm text-[#F06292] mb-5">* กรุณาระบุอย่างน้อย 1 ช่องทาง เพื่อให้เราติดต่อกลับได้นะคะ/นะครับ</p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div>
+              <label class="block text-sm font-medium mb-1 text-[#7D5A5A]"><i class="fas fa-phone text-[#D87093] opacity-70"></i> เบอร์โทรศัพท์</label>
+              <input type="tel" id="phone" class="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F8BBD0] focus:border-[#F8BBD0] outline-none transition" placeholder="08xxxxxxxx">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1 text-[#7D5A5A]"><i class="fab fa-line text-[#06C755] opacity-80"></i> Line ID</label>
+              <input type="text" id="lineId" class="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F8BBD0] focus:border-[#F8BBD0] outline-none transition" placeholder="ไอดีไลน์">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1 text-[#7D5A5A]"><i class="fas fa-envelope text-[#D87093] opacity-70"></i> อีเมล</label>
+              <input type="email" id="email" class="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F8BBD0] focus:border-[#F8BBD0] outline-none transition" placeholder="email@example.com">
+            </div>
+          </div>
+        </div>
+
+        <!-- ส่วนที่ 4: ความสนใจ -->
+        <div class="bg-white p-6 rounded-2xl border border-[#FCE4EC] shadow-sm hover:shadow-md transition duration-300">
+          <h2 class="text-xl font-semibold mb-1 flex items-center text-[#C27BA0]">
+            <i class="fas fa-heart mr-2 text-[#F4A7B9]"></i> ✨ ความสนใจที่อยากให้ NxLife เชื่อมต่อ
+          </h2>
+          <p class="text-xs text-[#D87093] mb-5 pl-7">เลือกได้มากกว่า 1 ข้อ ตามความสนใจของคุณ</p>
+          
+          <div id="interestContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3 pl-2 mb-5">
+            <!-- ข้อมูลดึงจาก GAS -->
+          </div>
+
+          <p class="text-xs text-[#7D5A5A] italic bg-[#FFF0F5] p-3 rounded-xl border border-[#FCE4EC] text-center mt-2">
+            ไม่ต้องกังวลว่าจะต้องเลือกอะไรเป็นพิเศษ เรายินดีทำความรู้จักและเดินไปกับคุณในทุกก้าวของการเติบโตนะครับ 💖
+          </p>
+        </div>
+
+        <!-- ส่วนที่ 5: สถานะความเชื่อ -->
+        <div class="bg-white p-6 rounded-2xl border border-[#FCE4EC] shadow-sm hover:shadow-md transition duration-300">
+           <h2 class="text-xl font-semibold mb-4 flex items-center text-[#C27BA0]">
+            <i class="fas fa-cross mr-2 text-[#F4A7B9]"></i> สถานภาพความเชื่อเบื้องต้น
+          </h2>
+           <div>
+              <select id="beliefStatus" class="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F8BBD0] focus:border-[#F8BBD0] bg-white outline-none transition cursor-pointer">
+                <option value="">-- ไม่ระบุ / ให้เจ้าหน้าที่ประเมิน --</option>
+              </select>
+            </div>
+        </div>
+
+        <!-- คำลงท้ายก่อนกดลงทะเบียน -->
+        <div class="text-center mt-10 mb-6 px-4">
+          <p class="text-[#D87093] font-bold text-lg mb-2">ก่อนกดลงทะเบียน… ✨</p>
+          <p class="text-[#7D5A5A] mb-1">ส่งรอยยิ้มเล็ก ๆ พร้อมเปิดใจรับมิตรภาพดี ๆ ที่กำลังเริ่มต้น 💖</p>
+          <p class="text-[#7D5A5A]">แล้วค่อย ๆ แตะที่ปุ่ม <span class="font-semibold text-[#D87093]">“กดส่ง...รอยยิ้ม ทักทาย และเปิดประตูสู่มิตรภาพ”</span> เพื่อให้เราได้รู้จักกันมากขึ้นนะครับ/นะคะ 🤗</p>
+        </div>
+
+        <!-- ปุ่ม Submit -->
+        <div class="pt-2">
+          <button type="submit" id="submitBtn" class="w-full bg-[#F48FB1] hover:bg-[#F06292] text-white font-bold py-4 px-4 rounded-2xl transition duration-300 shadow-[0_4px_15px_rgb(244,143,177,0.4)] hover:shadow-[0_6px_20px_rgb(240,98,146,0.5)] transform hover:-translate-y-1 text-base md:text-lg">
+            กดส่ง...รอยยิ้ม ทักทาย และเปิดประตูสู่มิตรภาพ
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbz9RktJktiwGv9yEVsKnKZnMt1iIU4YysyoH5rUilNhRVsFt6CWBPuHOjtMCI0iYNxTZQ/exec"; 
+
+    window.addEventListener('DOMContentLoaded', () => {
+      fetch(GAS_URL)
+        .then(response => response.json())
+        .then(result => {
+          if (result.status === "success") {
+            const data = result.data;
+            
+            const populateSelect = (elementId, optionsArray) => {
+              const select = document.getElementById(elementId);
+              optionsArray.forEach(item => {
+                let opt = document.createElement("option");
+                opt.value = item;
+                opt.text = item;
+                select.appendChild(opt);
+              });
+            };
+
+            if(data.source) populateSelect("source", data.source);
+            if(data.age) populateSelect("age", data.age);
+            if(data.gender) populateSelect("gender", data.gender);
+            if(data.province) populateSelect("province", data.province);
+            if(data.beliefStatus) populateSelect("beliefStatus", data.beliefStatus);
+
+            const interestContainer = document.getElementById("interestContainer");
+            if(data.interest && data.interest.length > 0) {
+              data.interest.forEach(item => {
+                const label = document.createElement('label');
+                label.className = "flex items-center space-x-3 cursor-pointer p-2 hover:bg-[#FFF0F5] rounded-lg transition border border-transparent hover:border-[#FCE4EC]";
+                label.innerHTML = `
+                  <input type="checkbox" name="interestGroup" value="${item}" class="w-5 h-5 text-[#F48FB1] border-gray-300 rounded focus:ring-[#F48FB1] focus:ring-2">
+                  <span class="text-[#7D5A5A] font-medium">${item}</span>
+                `;
+                interestContainer.appendChild(label);
+              });
+            }
+
+            document.getElementById('loadingData').classList.add('hidden');
+            document.getElementById('visitorForm').classList.remove('hidden');
+          } else {
+             Swal.fire('ข้อผิดพลาด', 'ไม่สามารถโหลดตัวเลือกได้: ' + result.message, 'error');
+          }
+        })
+        .catch(error => {
+          console.error("Fetch Error:", error);
+          Swal.fire({
+            icon: 'error',
+            title: 'เชื่อมต่อฐานข้อมูลล้มเหลว',
+            text: 'ไม่สามารถดึงข้อมูลฟอร์มได้ กรุณารีเฟรชหน้าเว็บ',
+            confirmButtonColor: '#F48FB1'
+          });
+        });
+    });
+
+    document.getElementById("visitorForm").addEventListener("submit", function(e) {
+      e.preventDefault(); 
+
+      const phone = document.getElementById("phone").value.trim();
+      const lineId = document.getElementById("lineId").value.trim();
+      const email = document.getElementById("email").value.trim();
+
+      if (phone === "" && lineId === "" && email === "") {
+        Swal.fire({
+          icon: 'warning',
+          title: 'ขาดข้อมูลการติดต่อ',
+          text: 'กรุณาระบุ เบอร์โทรศัพท์, Line ID หรือ อีเมล อย่างน้อย 1 ช่องทางนะคะ/นะครับ 🥺',
+          confirmButtonColor: '#F48FB1'
+        });
+        return;
+      }
+
+      const selectedInterests = [];
+      document.querySelectorAll('input[name="interestGroup"]:checked').forEach(cb => {
+        selectedInterests.push(cb.value);
+      });
+
+      const payload = {
+        source: document.getElementById("source").value,
+        referrer: document.getElementById("referrer").value,
+        name: document.getElementById("name").value,
+        age: document.getElementById("age").value,
+        gender: document.getElementById("gender").value,
+        province: document.getElementById("province").value,
+        interest: selectedInterests, 
+        phone: phone,
+        lineId: lineId,
+        email: email,
+        beliefStatus: document.getElementById("beliefStatus").value
+      };
+
+      const submitBtn = document.getElementById("submitBtn");
+      const originalBtnText = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> กำลังส่งรอยยิ้ม...';
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-70');
+
+      fetch(GAS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      })
+      .then(response => response.json())
+      .then(result => {
+        if(result.status === "success") {
+        Swal.fire({
+            icon: 'success',
+            title: 'ดีใจที่ได้รู้จักกันนะครับ/คะ 💖',
+            html: 'ขอบคุณที่แวะมาทำความรู้จักกับ NxLife<br><br>หวังว่า NxLife จะเป็นอีกหนึ่งพื้นที่ที่ทำให้คุณรู้สึกอบอุ่น เป็นตัวของตัวเอง และมีเพื่อนร่วมเดินทางที่ดีนะครับ/คะ 🎉',
+            confirmButtonColor: '#F48FB1'
+          }).then(() => {
+            // 1. พยายามสั่งปิดหน้าต่าง (จะได้ผลดีถ้าเปิดฟอร์มผ่านแอป LINE หรือ Facebook)
+            window.close();
+            
+            // 2. ถ้าเบราว์เซอร์บล็อกการปิดแท็บ เราจะเคลียร์ฟอร์มทิ้งและโชว์หน้าจบสวยๆ แทน
+            document.body.innerHTML = `
+              <div class="min-h-screen flex flex-col items-center justify-center bg-[#FFF0F5] text-center p-6">
+                <i class="fas fa-heart text-6xl text-[#F48FB1] mb-6 animate-pulse"></i>
+                <h2 class="text-2xl md:text-3xl font-bold text-[#D87093] mb-3">ขอบคุณครับ/ค่ะ 💖</h2>
+                <p class="text-[#7D5A5A] text-lg">เราได้รับข้อมูลของท่านเรียบร้อยแล้ว<br>ท่านสามารถกด <b>ปิดหน้าต่างนี้</b> (X) ได้เลยครับ</p>
+              </div>
+            `;
+          });
+        } else {
+          Swal.fire('เกิดข้อผิดพลาด', result.message, 'error');
+        }
+      })
+      .catch(error => {
+        console.error("Submit Error:", error);
+        Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
+      })
+      .finally(() => {
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-70');
+      });
+    });
+  </script>
+</body>
+</html>
